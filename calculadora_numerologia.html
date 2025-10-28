@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Nombre de Poder</title>
-    <!-- Carga de Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Carga de la fuente Montserrat (Alternativa a Gotham) -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Carga de Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de la fuente Montserrat (Alternativa a Gotham) --><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* Definición del color dorado (Dorado real #e1b677) */
         :root {
             --color-gold: #e1b677;
             --color-bg-main: #171717;
             --color-border-subtle: #a38243;
+            --color-input-bg: #322038; /* Nuevo color para el fondo de los inputs y tabla */
         }
 
         /* Estilos generales (Fondo principal y fuente legible) */
@@ -58,9 +57,14 @@
             border: 1px solid var(--color-border-subtle);
         }
         
-        /* Aseguramos que el fondo de los inputs coincida con el fondo principal */
+        /* Fondo de los bloques de input (Sección 1 y 2) */
         .input-block-bg {
-             background-color: var(--color-bg-main);
+             background-color: var(--color-bg-main); /* Mantiene el fondo principal como base */
+        }
+
+        /* Fondo específico para los input fields y resultados dentro de los bloques */
+        .input-field-bg {
+            background-color: var(--color-input-bg); /* Nuevo color de fondo para inputs */
         }
     </style>
 </head>
@@ -68,55 +72,46 @@
 
     <div class="w-full max-w-2xl shadow-2xl rounded-xl p-6 md:p-10 card-container">
         
-        <!-- ESPACIO PARA EL LOGO/IMAGEN (URL de ImgBB) -->
-        <div class="text-center mb-6">
+        <!-- ESPACIO PARA EL LOGO/IMAGEN (URL de ImgBB) --><!-- Clase 'py-0 my-0' para eliminar padding y margin vertical agresivamente --><div class="text-center py-0 my-0"> 
             <img src="https://i.ibb.co/gMy4N0nJ/logo.png" 
                  onerror="this.style.display='none'" 
                  alt="Logo de Numerología" 
-                 class="mx-auto h-72 w-auto object-contain mb-4 rounded-lg">
-        </div>
+                 class="mx-auto h-72 w-auto object-contain my-0 rounded-lg"> 
+                 <!-- 'my-0' elimina margen vertical --></div>
 
-        <!-- Encabezado -->
-        <div class="text-center mb-8">
+        <!-- Encabezado --><!-- Clase 'mt-0' para pegar al logo lo más posible --><div class="text-center mb-8 mt-0"> 
             <h1 class="text-3xl md:text-4xl font-extrabold text-gold">El Secreto del Nombre de Poder</h1>
             <p class="text-sm text-gray-400 mt-1">Calculadora de Vibración y Bloqueos (Bono Exclusivo)</p>
         </div>
 
-        <!-- Inputs Principales -->
-        <div class="space-y-6">
-            <!-- Sección 1: Destino -->
-            <div class="p-4 rounded-lg border border-gray-700 input-block-bg">
+        <!-- Inputs Principales --><div class="space-y-6">
+            <!-- Sección 1: Destino --><div class="p-4 rounded-lg border border-gray-700 input-block-bg">
                 <h2 class="text-xl font-semibold mb-3 text-gold">1. Número de Destino (Misión Vital)</h2>
                 <label for="fechaNacimiento" class="block text-sm font-medium text-gray-300 mb-1">Tu Fecha de Nacimiento:</label>
-                <input type="date" id="fechaNacimiento" oninput="calcularDestino()" class="w-full p-3 border border-gray-600 rounded-lg focus:ring-0 bg-gray-900 text-gray-200 transition duration-150">
+                <!-- Aplicado el nuevo color de fondo al input --><input type="date" id="fechaNacimiento" oninput="calcularDestino()" class="w-full p-3 border border-gray-600 rounded-lg focus:ring-0 text-gray-200 transition duration-150 input-field-bg">
                 
-                <div id="resultadoDestino" class="mt-3 p-3 bg-gray-900 border border-dashed border-gray-700 rounded-md text-center">
+                <!-- Aplicado el nuevo color de fondo al div de resultado --><div id="resultadoDestino" class="mt-3 p-3 border border-dashed border-gray-700 rounded-md text-center input-field-bg">
                     <p class="text-gray-400">Tu Destino vibra en: <span class="font-bold text-xl text-gold" id="valorDestino">?</span></p>
                 </div>
             </div>
 
-            <!-- Sección 2: Corrección de Nombre (Expresión) -->
-            <div class="p-4 rounded-lg border border-gray-700 input-block-bg">
+            <!-- Sección 2: Corrección de Nombre (Expresión) --><div class="p-4 rounded-lg border border-gray-700 input-block-bg">
                 <h2 class="text-xl font-semibold mb-3 text-gold">2. Nombre de Poder Social</h2>
                 <label for="nombreCompleto" class="block text-sm font-medium text-gray-300 mb-1">Nombre o Firma a Evaluar (sin acentos):</label>
-                <input type="text" id="nombreCompleto" oninput="calcularExpresion()" placeholder="¡Escribe tu nombre de poder aquí!" class="w-full p-3 border border-gray-600 rounded-lg focus:ring-0 bg-gray-900 text-gray-200 transition duration-150 uppercase tracking-widest">
+                <!-- Aplicado el nuevo color de fondo al input --><input type="text" id="nombreCompleto" oninput="calcularExpresion()" placeholder="¡Escribe tu nombre de poder aquí!" class="w-full p-3 border border-gray-600 rounded-lg focus:ring-0 text-gray-200 transition duration-150 uppercase tracking-widest input-field-bg">
                 
-                <div id="analisisNombre" class="mt-4 p-3 bg-gray-900 border border-dashed border-gray-700 rounded-md">
+                <!-- Aplicado el nuevo color de fondo al div de análisis --><div id="analisisNombre" class="mt-4 p-3 border border-dashed border-gray-700 rounded-md input-field-bg">
                     <p class="text-sm font-medium text-gray-400 mb-2">Análisis de la Vibración:</p>
                     <div id="detalleVibracion" class="text-center font-mono text-gold text-base overflow-x-auto whitespace-nowrap mb-2"></div>
                     <p class="text-gray-400 text-center">Tu Nombre de Poder vibra en: <span class="font-extrabold text-2xl text-gold" id="valorExpresion">?</span></p>
                 </div>
                 
-                <!-- Indicador de Bloqueos Potenciales -->
-                <div id="secuenciaAlerta" class="mt-3 p-3 text-sm rounded-lg text-center hidden"></div>
+                <!-- Indicador de Bloqueos Potenciales --><div id="secuenciaAlerta" class="mt-3 p-3 text-sm rounded-lg text-center hidden"></div>
             </div>
             
-            <!-- Tabla Pitagórica de Referencia -->
-            <div class="p-4 rounded-lg bg-gray-900 border border-gray-700">
-                <h3 class="text-lg font-semibold mb-2 text-gold">Tabla Pitagórica (Referencia)</h3>
+            <!-- Tabla Pitagórica de Referencia --><div class="p-4 rounded-lg input-field-bg border border-gray-700"> <!-- Aplicado el nuevo color de fondo aquí también --><h3 class="text-lg font-semibold mb-2 text-gold">Tabla Pitagórica (Referencia)</h3>
                 <div id="tablaPitagorica" class="text-xs md:text-sm grid grid-cols-9 gap-1 text-center font-bold text-white">
-                    <!-- La tabla se generará con JavaScript -->
-                </div>
+                    <!-- La tabla se generará con JavaScript --></div>
             </div>
             
         </div>
@@ -238,7 +233,7 @@
             const resultado = analizarNombre(nombre);
             
             document.getElementById('detalleVibracion').textContent = resultado.secuenciaDetallada;
-            document.getElementById('valorExpresion').textContent = resultado.reduccionFinal;
+            document.getElementById('valorExpresion').textContent = nombre.length > 0 ? resultado.reduccionFinal : '?';
             
             detectarBloqueos(resultado.secuencia);
         }
@@ -269,11 +264,16 @@
                      const parStr = String(numeros[i]) + String(numeros[i+1]);
                      const parNumerico = parseInt(parStr);
 
+                     // La lógica para buscar pares 13, 14, 16, 19 se basa en que los dígitos 
+                     // se encuentren adyacentes, no que sumen ese número. Esto es una convención.
                      if (leccionesKarmicas.includes(parNumerico)) {
-                         mensajes.push(`⚡️ Advertencia: El par numérico ${parNumerico} (Lección Kármica) aparece entre la posición ${i+1} y ${i+2}. Requiere atención.`);
+                         mensajes.push(`⚡️ Advertencia: El par numérico ${parNumerico} (Patrón Kármico) aparece entre la posición ${i+1} y ${i+2}. Requiere atención.`);
                      }
                  }
             }
+            
+            // NOTA: Se elimina la Detección de Ausencia de números, manteniendo la funcionalidad original.
+            
             
             if (mensajes.length > 0) {
                 alertaDiv.innerHTML = mensajes.join('<br>');
@@ -293,8 +293,10 @@
 
         function calcularDestino() {
             const fechaStr = document.getElementById('fechaNacimiento').value;
+            const valorDestinoElement = document.getElementById('valorDestino');
+            
             if (!fechaStr) {
-                document.getElementById('valorDestino').textContent = '?';
+                valorDestinoElement.textContent = '?';
                 return;
             }
 
@@ -304,19 +306,30 @@
             const mes = parseInt(partes[1]);
             const dia = parseInt(partes[2]);
             
-            // Reducción de cada parte
+            // Reducción de cada parte (se mantiene la reducción completa, incluyendo Maestros)
             const d = reducir(dia);
             const m = reducir(mes);
             const a = reducir(anio);
             
-            // Suma total
-            const sumaTotal = d + m + a;
+            // Suma total (el único lugar donde se chequean las Lecciones Kármicas 13, 14, 16, 19)
+            // Se corrige la lógica para obtener la suma de DÍGITOS de la fecha completa, no el número total.
+            const sumaDeDigitosFecha = String(dia).split('').reduce((acc, digit) => acc + parseInt(digit), 0) + 
+                                     String(mes).split('').reduce((acc, digit) => acc + parseInt(digit), 0) +
+                                     String(anio).split('').reduce((acc, digit) => acc + parseInt(digit), 0);
+                                     
+            let leccionKarmica = '';
+            if ([13, 14, 16, 19].includes(sumaDeDigitosFecha)) {
+                 leccionKarmica = ` (¡Lección Kármica ${sumaDeDigitosFecha}!)`;
+            }
+            
+            // Suma de las reducciones 
+            const sumaReducciones = d + m + a;
             
             // Reducción final del Destino
-            const destinoFinal = reducir(sumaTotal);
+            const destinoFinal = reducir(sumaReducciones);
 
             // Muestra el resultado
-            document.getElementById('valorDestino').textContent = destinoFinal;
+            valorDestinoElement.innerHTML = `${destinoFinal}${leccionKarmica}`;
         }
 
         // --- GENERAR LA TABLA PITAGÓRICA EN HTML ---
@@ -334,18 +347,18 @@
             }
 
             let html = '';
-            // Crear el encabezado de los valores
+            // Crear el encabezado de los valores (SOLO EL NÚMERO)
             for (let i = 1; i <= 9; i++) {
                 // Títulos de la tabla con acento dorado
-                html += `<div class="bg-gray-800 p-2 rounded-t-lg shadow-md text-gold">Valor ${i}</div>`;
+                html += `<div class="bg-gray-800 p-2 rounded-t-lg shadow-md text-gold">${i}</div>`;
             }
 
             // Crear el contenido de las letras
             html += '<div class="col-span-9 grid grid-cols-9 gap-1">';
             for (let i = 1; i <= 9; i++) {
                 const letras = valoresUnicos[i] || [];
-                // Contenido de la tabla con fondo oscuro
-                html += `<div class="bg-gray-900 text-yellow-300 p-2 text-xs flex flex-col justify-start items-center rounded-b-lg h-full">${letras.join(', ')}</div>`;
+                // Contenido de la tabla con fondo oscuro y color de texto 'text-gold'
+                html += `<div class="input-field-bg text-gold p-2 text-xs flex flex-col justify-start items-center rounded-b-lg h-full">${letras.join(', ')}</div>`;
             }
             html += '</div>';
 
@@ -364,4 +377,3 @@
 
 </body>
 </html>
-
