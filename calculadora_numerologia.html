@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Nombre de Poder</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de la fuente Montserrat (Alternativa a Gotham) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Definición del color dorado (Dorado real #d4af37) */
+        :root {
+            --color-gold: #d4af37;
+            --color-bg-main: #171717;
+            --color-border-subtle: #a38243;
+        }
+
+        /* Estilos generales (Fondo principal y fuente legible) */
+        body {
+            background-color: var(--color-bg-main);
+            font-family: 'Montserrat', sans-serif; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* Contenedor principal de la tarjeta */
+        .card-container {
+            background-color: #0d0d0d; /* Negro más profundo para la tarjeta */
+            border: 2px solid var(--color-border-subtle); 
+        }
+
+        /* Estilo para Títulos y Acentos (Color Dorado #d4af37) */
+        .text-gold {
+            color: var(--color-gold); 
+        }
+
+        /* Input y focus styling */
+        input:focus {
+            border-color: var(--color-border-subtle) !important; 
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.5) !important; 
+        }
+
+        /* Alerta positiva (Sin bloqueos) */
+        .alerta-positiva {
+            background-color: #1a241e; /* Tono verde/gris sutil */
+            color: var(--color-gold);
+            border: 1px solid var(--color-border-subtle);
+        }
+
+        /* Alerta negativa (Bloqueos detectados) */
+        .alerta-negativa {
+            background-color: #381f1f; /* Tono rojo/gris sutil */
+            color: var(--color-gold);
+            border: 1px solid var(--color-border-subtle);
+        }
+        
+        /* Aseguramos que el fondo de los inputs coincida con el fondo principal */
+        .input-block-bg {
+             background-color: var(--color-bg-main);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="w-full max-w-2xl shadow-2xl rounded-xl p-6 md:p-10 card-container">
+        
+        <!-- ESPACIO PARA EL LOGO/IMAGEN (Tu URL de Google Drive) -->
+        <div class="text-center mb-6">
+            <img src="https://drive.google.com/uc?export=view&id=1HEMo5s_GoyyyBwElsBK8CFPN8K8yGoBC" 
+                 onerror="this.style.display='none'" 
+                 alt="Logo de Numerología" 
+                 class="mx-auto h-20 w-auto object-contain mb-4 rounded-lg">
+        </div>
+
+        <!-- Encabezado -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-gold">El Secreto del Nombre de Poder</h1>
+            <p class="text-sm text-gray-400 mt-1">Calculadora de Vibración y Bloqueos (Bono Exclusivo)</p>
+        </div>
+
+        <!-- Inputs Principales -->
+        <div class="space-y-6">
+            <!-- Sección 1: Destino -->
+            <div class="p-4 rounded-lg border border-gray-700 input-block-bg">
+                <h2 class="text-xl font-semibold mb-3 text-gold">1. Número de Destino (Misión Vital)</h2>
+                <label for="fechaNacimiento" class="block text-sm font-medium text-gray-300 mb-1">Tu Fecha de Nacimiento:</label>
+                <input type="date" id="fechaNacimiento" oninput="calcularDestino()" class="w-full p-3 border border-gray-600 rounded-lg focus:ring-0 bg-gray-900 text-gray-200 transition duration-150">
+                
+                <div id="resultadoDestino" class="mt-3 p-3 bg-gray-900 border border-dashed border-gray-700 rounded-md text-center">
+                    <p class="text-gray-400">Tu Destino vibra en: <span class="font-bold text-xl text-gold" id="valorDestino">?</span></p>
+                </div>
+            </div>
+
+            <!-- Sección 2: Corrección de Nombre (Expresión) -->
+            <div class="p-4 rounded-lg border border-gray-700 input-block-bg">
+                <h2 class="text-xl font-semibold mb-3 text-gold">2. Nombre de Poder Social</h2>
+                <label for="nombreCompleto" class="block text-sm font-medium text-gray-300 mb-1">Nombre o Firma a Evaluar (sin acentos):</label>
+                <input type="text" id="nombreCompleto" oninput="calcularExpresion()" placeholder="Ej: Ana T. Gomez (¡Simula tu nombre de poder aquí!)" class="w-full p-3 border border-gray-600 rounded-lg focus:ring-0 bg-gray-900 text-gray-200 transition duration-150 uppercase tracking-widest">
+                
+                <div id="analisisNombre" class="mt-4 p-3 bg-gray-900 border border-dashed border-gray-700 rounded-md">
+                    <p class="text-sm font-medium text-gray-400 mb-2">Análisis de la Vibración:</p>
+                    <div id="detalleVibracion" class="text-center font-mono text-gold text-base overflow-x-auto whitespace-nowrap mb-2"></div>
+                    <p class="text-gray-400 text-center">Tu Nombre de Poder vibra en: <span class="font-extrabold text-2xl text-gold" id="valorExpresion">?</span></p>
+                </div>
+                
+                <!-- Indicador de Bloqueos Potenciales -->
+                <div id="secuenciaAlerta" class="mt-3 p-3 text-sm rounded-lg text-center hidden"></div>
+            </div>
+            
+            <!-- Tabla Pitagórica de Referencia -->
+            <div class="p-4 rounded-lg bg-gray-900 border border-gray-700">
+                <h3 class="text-lg font-semibold mb-2 text-gold">Tabla Pitagórica (Referencia)</h3>
+                <div id="tablaPitagorica" class="text-xs md:text-sm grid grid-cols-9 gap-1 text-center font-bold text-white">
+                    <!-- La tabla se generará con JavaScript -->
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // Mapeo de valores numerológicos de las letras (A=1, B=2, etc.)
+        const VALORES_LETRAS = {
+            'A': 1, 'J': 1, 'S': 1,
+            'B': 2, 'K': 2, 'T': 2,
+            'C': 3, 'L': 3, 'U': 3,
+            'D': 4, 'M': 4, 'V': 4,
+            'E': 5, 'N': 5, 'W': 5,
+            'F': 6, 'O': 6, 'X': 6,
+            'G': 7, 'P': 7, 'Y': 7,
+            'H': 8, 'Q': 8, 'Z': 8,
+            'I': 9, 'R': 9
+        };
+        
+        // Números que no se reducen (Maestros)
+        const NUMEROS_MAESTROS = [11, 22, 33];
+        
+        // --- LÓGICA DE CÁLCULO GENERAL ---
+        
+        /**
+         * Realiza la reducción continua de un número hasta obtener un dígito simple o un Número Maestro.
+         * @param {number} num - Número a reducir.
+         * @returns {number} - El número final reducido.
+         */
+        function reducir(num) {
+            if (NUMEROS_MAESTROS.includes(num)) {
+                return num;
+            }
+            let strNum = String(num);
+            while (strNum.length > 1) {
+                if (NUMEROS_MAESTROS.includes(parseInt(strNum))) {
+                    return parseInt(strNum);
+                }
+                let sum = 0;
+                for (let digit of strNum) {
+                    sum += parseInt(digit);
+                }
+                strNum = String(sum);
+                // Chequeo de Maestro en la segunda reducción
+                if (strNum.length === 2 && NUMEROS_MAESTROS.includes(parseInt(strNum))) {
+                    return parseInt(strNum);
+                }
+            }
+            return parseInt(strNum);
+        }
+
+        /**
+         * Limpia el texto de acentos, espacios y caracteres especiales, dejando solo mayúsculas.
+         * @param {string} text - Texto de entrada.
+         * @returns {string} - Texto limpio en mayúsculas.
+         */
+        function limpiarTexto(text) {
+            // Elimina acentos y convierte a mayúsculas
+            text = text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+            // Elimina espacios, guiones, puntos y caracteres que no sean letras
+            return text.replace(/[^A-Z]/g, '');
+        }
+
+        /**
+         * Analiza un texto (nombre) y calcula su valor y la reducción final.
+         * @param {string} nombre - Nombre a analizar.
+         * @returns {{valorTotal: number, reduccionFinal: number, secuencia: string, secuenciaDetallada: string}}
+         */
+        function analizarNombre(nombre) {
+            const nombreLimpio = limpiarTexto(nombre);
+            let valorTotal = 0;
+            let secuenciaTexto = [];
+            let secuenciaNumerica = [];
+
+            for (let letra of nombreLimpio) {
+                const valor = VALORES_LETRAS[letra] || 0;
+                valorTotal += valor;
+                secuenciaTexto.push(`${letra}(${valor})`);
+                if (valor > 0) {
+                    secuenciaNumerica.push(valor);
+                }
+            }
+
+            const reduccionFinal = reducir(valorTotal);
+
+            // Generar la cadena de reducción completa
+            let reduccionDetallada = secuenciaTexto.join(' + ');
+            if (valorTotal > 9) {
+                reduccionDetallada += ` → ${valorTotal}`;
+                let numReduccion = valorTotal;
+                while (numReduccion > 9 && !NUMEROS_MAESTROS.includes(numReduccion)) {
+                    let sum = 0;
+                    String(numReduccion).split('').forEach(digit => sum += parseInt(digit));
+                    numReduccion = sum;
+                    if (numReduccion > 9) {
+                        reduccionDetallada += ` → ${numReduccion}`;
+                    }
+                }
+                if (reduccionFinal !== valorTotal) {
+                    // Solo añadir el paso final si no es un Maestro inicial
+                    reduccionDetallada += ` → ${reduccionFinal}`;
+                }
+            } else {
+                 reduccionDetallada += ` → ${valorTotal}`;
+            }
+
+            return {
+                valorTotal,
+                reduccionFinal,
+                secuencia: secuenciaNumerica.join('-'),
+                secuenciaDetallada: reduccionDetallada
+            };
+        }
+        
+        // --- FUNCIÓN PARA CALCULAR LA EXPRESIÓN (NOMBRE) ---
+
+        function calcularExpresion() {
+            const nombre = document.getElementById('nombreCompleto').value;
+            const resultado = analizarNombre(nombre);
+            
+            document.getElementById('detalleVibracion').textContent = resultado.secuenciaDetallada;
+            document.getElementById('valorExpresion').textContent = resultado.reduccionFinal;
+            
+            detectarBloqueos(resultado.secuencia);
+        }
+
+        /**
+         * Detecta secuencias problemáticas (ej: 4-4-4, 7-7-7, 13, 16, 19).
+         * @param {string} secuenciaNumerica - Secuencia de números separados por guiones (ej: "1-5-1-2-7-4-5").
+         */
+        function detectarBloqueos(secuenciaNumerica) {
+            const nombreCompleto = document.getElementById('nombreCompleto'); // Se usa para la condición de mostrar alerta
+            const numeros = secuenciaNumerica.split('-').filter(n => n !== '');
+            const alertaDiv = document.getElementById('secuenciaAlerta');
+            let mensajes = [];
+
+            // 1. Detección de secuencias triples problemáticas (ej: 4-4-4, 7-7-7)
+            const secuenciasNegativas = ['1-1-1', '2-2-2', '4-4-4', '7-7-7'];
+            for (const seq of secuenciasNegativas) {
+                if (secuenciaNumerica.includes(seq)) {
+                    mensajes.push(`⚠️ Secuencia ${seq.split('-').join('')} detectada. Puede indicar un bloqueo de energía que requiere corrección.`);
+                }
+            }
+
+            // 2. Detección de Lecciones Kármicas (buscando solo pares consecutivos)
+            const leccionesKarmicas = [13, 14, 16, 19];
+            if (numeros.length > 1) { // Necesitas al menos dos números
+                 for (let i = 0; i < numeros.length - 1; i++) {
+                     // Combina los valores para buscar 13, 14, 16, 19
+                     const parStr = String(numeros[i]) + String(numeros[i+1]);
+                     const parNumerico = parseInt(parStr);
+
+                     if (leccionesKarmicas.includes(parNumerico)) {
+                         mensajes.push(`⚡️ Advertencia: El par numérico ${parNumerico} (Lección Kármica) aparece entre la posición ${i+1} y ${i+2}. Requiere atención.`);
+                     }
+                 }
+            }
+            
+            if (mensajes.length > 0) {
+                alertaDiv.innerHTML = mensajes.join('<br>');
+                alertaDiv.classList.remove('hidden');
+                alertaDiv.classList.remove('alerta-positiva');
+                alertaDiv.classList.add('alerta-negativa');
+            } else if (nombreCompleto.value.length > 0) { // Mostrar si no hay bloqueos y hay texto
+                alertaDiv.innerHTML = '✨ No se detectaron secuencias de bloqueo principales.';
+                alertaDiv.classList.remove('hidden', 'alerta-negativa');
+                alertaDiv.classList.add('alerta-positiva');
+            } else {
+                alertaDiv.classList.add('hidden');
+            }
+        }
+
+        // --- FUNCIÓN PARA CALCULAR EL DESTINO (FECHA) ---
+
+        function calcularDestino() {
+            const fechaStr = document.getElementById('fechaNacimiento').value;
+            if (!fechaStr) {
+                document.getElementById('valorDestino').textContent = '?';
+                return;
+            }
+
+            // El formato de input[type=date] es YYYY-MM-DD
+            const partes = fechaStr.split('-');
+            const anio = parseInt(partes[0]);
+            const mes = parseInt(partes[1]);
+            const dia = parseInt(partes[2]);
+            
+            // Reducción de cada parte
+            const d = reducir(dia);
+            const m = reducir(mes);
+            const a = reducir(anio);
+            
+            // Suma total
+            const sumaTotal = d + m + a;
+            
+            // Reducción final del Destino
+            const destinoFinal = reducir(sumaTotal);
+
+            // Muestra el resultado
+            document.getElementById('valorDestino').textContent = destinoFinal;
+        }
+
+        // --- GENERAR LA TABLA PITAGÓRICA EN HTML ---
+
+        function generarTablaPitagorica() {
+            const tablaDiv = document.getElementById('tablaPitagorica');
+            const valoresUnicos = {};
+            // Invertir el mapeo para agrupar las letras por valor
+            for (const letra in VALORES_LETRAS) {
+                const valor = VALORES_LETRAS[letra];
+                if (!valoresUnicos[valor]) {
+                    valoresUnicos[valor] = [];
+                }
+                valoresUnicos[valor].push(letra);
+            }
+
+            let html = '';
+            // Crear el encabezado de los valores
+            for (let i = 1; i <= 9; i++) {
+                // Títulos de la tabla con acento dorado
+                html += `<div class="bg-gray-800 p-2 rounded-t-lg shadow-md text-gold">Valor ${i}</div>`;
+            }
+
+            // Crear el contenido de las letras
+            html += '<div class="col-span-9 grid grid-cols-9 gap-1">';
+            for (let i = 1; i <= 9; i++) {
+                const letras = valoresUnicos[i] || [];
+                // Contenido de la tabla con fondo oscuro
+                html += `<div class="bg-gray-900 text-yellow-300 p-2 text-xs flex flex-col justify-start items-center rounded-b-lg h-full">${letras.join(', ')}</div>`;
+            }
+            html += '</div>';
+
+            tablaDiv.innerHTML = html;
+        }
+
+        // Inicialización al cargar la página
+        window.onload = function() {
+            generarTablaPitagorica();
+            // Ejecutar cálculos iniciales si hay datos
+            calcularDestino();
+            calcularExpresion();
+        }
+
+    </script>
+
+</body>
+</html>
