@@ -70,11 +70,12 @@
 </head>
 <body>
 
-    <div class="w-full max-w-2xl shadow-2xl rounded-xl p-6 md:p-10 card-container">
+    <!-- Modificado el padding vertical de la tarjeta (py-2, md:py-4) -->
+    <div class="w-full max-w-2xl shadow-2xl rounded-xl px-6 py-2 md:px-10 md:py-4 card-container">
         
         <!-- ESPACIO PARA EL LOGO/IMAGEN (URL de ImgBB) -->
-        <!-- Uso de margen negativo -mt-4 y -mb-4 para anular el padding de la tarjeta -->
-        <div class="text-center -mt-4 -mb-4"> 
+        <!-- Uso de margen negativo -mt-6 y -mb-6 para anular el padding de la tarjeta -->
+        <div class="text-center -mt-6 -mb-6"> 
             <img src="https://i.ibb.co/gMy4N0nJ/logo.png" 
                  onerror="this.style.display='none'" 
                  alt="Logo de Numerología" 
@@ -97,6 +98,16 @@
                 <!-- Aplicado el nuevo color de fondo al div de resultado --><div id="resultadoDestino" class="mt-3 p-3 border border-dashed border-gray-700 rounded-md text-center input-field-bg">
                     <p class="text-gray-400">Tu Destino vibra en: <span class="font-bold text-xl text-gold" id="valorDestino">?</span></p>
                 </div>
+
+                <!-- NUEVO: Contenedor para la info de Destino -->
+                <div id="infoDestino" class="mt-3 p-3 border border-dashed border-gray-700 rounded-md text-left input-field-bg hidden">
+                    <h4 class="text-lg font-semibold text-gold mb-1">Significado del Número:</h4>
+                    <p class="text-sm text-gray-300">
+                        <strong class="text-gold">Virtudes:</strong> <span id="virtudesDestino"></span>
+                        <br>
+                        <strong class="text-gold">Desafíos:</strong> <span id="desafiosDestino"></span>
+                    </p>
+                </div>
             </div>
 
             <!-- Sección 2: Corrección de Nombre (Expresión) --><div class="p-4 rounded-lg border border-gray-700 input-block-bg">
@@ -108,6 +119,16 @@
                     <p class="text-sm font-medium text-gray-400 mb-2">Análisis de la Vibración:</p>
                     <div id="detalleVibracion" class="text-center font-mono text-gold text-base overflow-x-auto whitespace-nowrap mb-2"></div>
                     <p class="text-gray-400 text-center">Tu Nombre de Poder vibra en: <span class="font-extrabold text-2xl text-gold" id="valorExpresion">?</span></p>
+                </div>
+
+                <!-- NUEVO: Contenedor para la info de Expresión -->
+                <div id="infoExpresion" class="mt-3 p-3 border border-dashed border-gray-700 rounded-md text-left input-field-bg hidden">
+                    <h4 class="text-lg font-semibold text-gold mb-1">Significado del Número:</h4>
+                    <p class="text-sm text-gray-300">
+                        <strong class="text-gold">Virtudes:</strong> <span id="virtudesExpresion"></span>
+                        <br>
+                        <strong class="text-gold">Desafíos:</strong> <span id="desafiosExpresion"></span>
+                    </p>
                 </div>
                 
                 <!-- Indicador de Bloqueos Potenciales --><div id="secuenciaAlerta" class="mt-3 p-3 text-sm rounded-lg text-center hidden"></div>
@@ -137,6 +158,72 @@
         
         // Números que no se reducen (Maestros)
         const NUMEROS_MAESTROS = [11, 22, 33];
+
+        // NUEVO: Objeto con los significados de los números (basado en el PDF)
+        const SIGNIFICADOS = {
+            1: {
+                virtudes: "Liderazgo, independencia, originalidad, iniciativa.",
+                desafios: "Superar la arrogancia y la soledad."
+            },
+            2: {
+                virtudes: "Cooperación, equilibrio, sensibilidad, diplomacia.",
+                desafios: "Superar la indecisión y la dependencia."
+            },
+            3: {
+                virtudes: "Comunicación, expresión, alegría, creatividad.",
+                desafios: "Manejar la dispersión y la superficialidad."
+            },
+            4: {
+                virtudes: "Disciplina, construcción, orden, trabajo, estructura.",
+                desafios: "Evitar ser rígido, dogmático o estancado."
+            },
+            5: {
+                virtudes: "Adaptabilidad, cambio, libertad, aventura.",
+                desafios: "Evitar los excesos y la inconstancia."
+            },
+            6: {
+                virtudes: "Familia, armonía, servicio a la comunidad, responsabilidad.",
+                desafios: "Evitar la interferencia y el sacrificio excesivo."
+            },
+            7: {
+                virtudes: "Investigación, introspección, fe, análisis, sabiduría.",
+                desafios: "Superar el aislamiento y el cinismo."
+            },
+            8: {
+                virtudes: "Poder, abundancia, liderazgo, capacidad de manifestar.",
+                desafios: "Manejar el poder con integridad, evitar la tiranía y la ambición desmedida."
+            },
+            9: {
+                virtudes: "Humanismo, compasión, servicio, entrega, cierre de ciclos.",
+                desafios: "Evitar la frustración, el desapego y el sacrificio extremo."
+            },
+            11: {
+                virtudes: "(Maestro) Gran intuición, visión espiritual, idealismo.",
+                desafios: "Manejar la tensión nerviosa, la impaciencia y el fanatismo."
+            },
+            22: {
+                virtudes: "(Maestro Constructor) Capacidad de materializar a gran escala, sueños prácticos.",
+                desafios: "Asumir la responsabilidad de ser un 'gran constructor', no temer al poder de materializar."
+            },
+            33: {
+                virtudes: "(Maestro Servidor) Amor incondicional, gran capacidad de enseñanza y sanación.",
+                desafios: "Evitar el auto-sacrificio, el perfeccionismo y la intromisión."
+            }
+        };
+
+        // NUEVO: Objeto con los significados de los bloqueos (basado en el PDF)
+        const SIGNIFICADOS_BLOQUEOS = {
+            // Triples (PDF Página 5)
+            '1-1-1': "Basado en el desafío del 1 (PDF Pág 3): Posible tendencia al egocentrismo, arrogancia y soledad.",
+            '2-2-2': "(PDF Pág 5) Indica dificultades en las relaciones personales o profesionales e inestabilidad emocional.",
+            '4-4-4': "(PDF Pág 5) Indica bloqueos financieros, problemas de salud o carga laboral excesiva sin recompensa.",
+            '7-7-7': "(PDF Pág 5) Indica tendencia al aislamiento y problemas con la expresión de la fe o la espiritualidad.",
+            // Pares Kármicos (PDF Página 3)
+            13: "Lección Kármica 13 (Resistencia al trabajo). El desafío es transformar el desorden en estructura.",
+            14: "Lección Kármica 14 (Abuso de la libertad). El desafío es dejar de depender del exterior y encontrar la libertad espiritual.",
+            16: "Lección Kármica 16 (Orgullo intelectual/espiritual). El desafío es superar el aislamiento y construir desde la humildad.",
+            19: "Lección Kármica 19 (Abuso de poder/Ego). El desafío es aprender a cooperar y recibir ayuda."
+        };
         
         // --- LÓGICA DE CÁLCULO GENERAL ---
         
@@ -236,9 +323,29 @@
             const nombre = document.getElementById('nombreCompleto').value;
             const resultado = analizarNombre(nombre);
             
+            // Referencias a los nuevos elementos de info
+            const infoExpresionDiv = document.getElementById('infoExpresion');
+            const virtudesExpresionSpan = document.getElementById('virtudesExpresion');
+            const desafiosExpresionSpan = document.getElementById('desafiosExpresion');
+
             document.getElementById('detalleVibracion').textContent = resultado.secuenciaDetallada;
             document.getElementById('valorExpresion').textContent = nombre.length > 0 ? resultado.reduccionFinal : '?';
             
+            // Mostrar información del número
+            if (nombre.length > 0) {
+                const info = SIGNIFICADOS[resultado.reduccionFinal];
+                if (info) {
+                    virtudesExpresionSpan.textContent = info.virtudes;
+                    desafiosExpresionSpan.textContent = info.desafios;
+                    infoExpresionDiv.classList.remove('hidden');
+                } else {
+                    infoExpresionDiv.classList.add('hidden');
+                }
+            } else {
+                // Ocultar si el campo está vacío
+                infoExpresionDiv.classList.add('hidden');
+            }
+
             detectarBloqueos(resultado.secuencia);
         }
 
@@ -256,7 +363,9 @@
             const secuenciasNegativas = ['1-1-1', '2-2-2', '4-4-4', '7-7-7'];
             for (const seq of secuenciasNegativas) {
                 if (secuenciaNumerica.includes(seq)) {
-                    mensajes.push(`⚠️ Secuencia ${seq.split('-').join('')} detectada. Puede indicar un bloqueo de energía que requiere corrección.`);
+                    // Añadimos el significado del bloqueo
+                    const significado = SIGNIFICADOS_BLOQUEOS[seq] || "Requiere corrección.";
+                    mensajes.push(`⚠️ <strong>Secuencia ${seq.split('-').join('')} detectada:</strong> ${significado}`);
                 }
             }
 
@@ -271,7 +380,9 @@
                      // La lógica para buscar pares 13, 14, 16, 19 se basa en que los dígitos 
                      // se encuentren adyacentes, no que sumen ese número. Esto es una convención.
                      if (leccionesKarmicas.includes(parNumerico)) {
-                         mensajes.push(`⚡️ Advertencia: El par numérico ${parNumerico} (Patrón Kármico) aparece entre la posición ${i+1} y ${i+2}. Requiere atención.`);
+                         // Añadimos el significado del bloqueo
+                         const significado = SIGNIFICADOS_BLOQUEOS[parNumerico] || "Requiere atención.";
+                         mensajes.push(`⚡️ <strong>Patrón ${parNumerico} detectado (Pos. ${i+1}-${i+2}):</strong> ${significado}`);
                      }
                  }
             }
@@ -298,9 +409,15 @@
         function calcularDestino() {
             const fechaStr = document.getElementById('fechaNacimiento').value;
             const valorDestinoElement = document.getElementById('valorDestino');
+
+            // Referencias a los nuevos elementos de info
+            const infoDestinoDiv = document.getElementById('infoDestino');
+            const virtudesDestinoSpan = document.getElementById('virtudesDestino');
+            const desafiosDestinoSpan = document.getElementById('desafiosDestino');
             
             if (!fechaStr) {
                 valorDestinoElement.textContent = '?';
+                infoDestinoDiv.classList.add('hidden'); // Ocultar info si no hay fecha
                 return;
             }
 
@@ -334,6 +451,16 @@
 
             // Muestra el resultado
             valorDestinoElement.innerHTML = `${destinoFinal}${leccionKarmica}`;
+
+            // Mostrar información del número
+            const info = SIGNIFICADOS[destinoFinal];
+            if (info) {
+                virtudesDestinoSpan.textContent = info.virtudes;
+                desafiosDestinoSpan.textContent = info.desafios;
+                infoDestinoDiv.classList.remove('hidden');
+            } else {
+                infoDestinoDiv.classList.add('hidden');
+            }
         }
 
         // --- GENERAR LA TABLA PITAGÓRICA EN HTML ---
@@ -381,3 +508,5 @@
 
 </body>
 </html>
+
+
